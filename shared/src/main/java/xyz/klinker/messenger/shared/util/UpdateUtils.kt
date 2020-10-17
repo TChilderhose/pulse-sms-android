@@ -3,10 +3,13 @@ package xyz.klinker.messenger.shared.util
 import android.app.Activity
 import android.app.job.JobScheduler
 import android.content.Context
+import android.content.Intent
 import android.content.pm.PackageManager
+import android.net.Uri
 import android.os.Build
 import android.preference.PreferenceManager
 import android.util.Log
+import androidx.appcompat.app.AlertDialog
 import androidx.work.WorkManager
 import xyz.klinker.messenger.api.implementation.Account
 import xyz.klinker.messenger.api.implementation.ApiUtils
@@ -34,12 +37,9 @@ class UpdateUtils(private val context: Activity) {
         val storedAppVersion = sharedPreferences.getInt("app_version", 0)
         ContactResyncService.runIfApplicable(context, sharedPreferences, storedAppVersion)
 
-        if (sharedPreferences.getBoolean("swipe_revamp", true)) {
-            sharedPreferences.edit().putBoolean("swipe_revamp", false).commit()
-            if (Settings.legacySwipeDelete) {
-                Settings.setValue(context, context.getString(R.string.pref_right_to_left_swipe), SwipeOption.DELETE.rep)
-                ApiUtils.updateRightToLeftSwipeAction(Account.accountId, SwipeOption.DELETE.rep)
-            }
+        if (sharedPreferences.getBoolean("notify-owner-change", true)) {
+            sharedPreferences.edit().putBoolean("notify-owner-change", false).commit()
+            notifyOwnerChange()
         }
 
         val currentAppVersion = appVersion
@@ -51,6 +51,17 @@ class UpdateUtils(private val context: Activity) {
         } else {
             false
         }
+    }
+
+    private fun notifyOwnerChange() {
+        AlertDialog.Builder(context)
+                .setMessage(if (Account.exists()) R.string.new_owner_with_account else R.string.new_owner_no_account)
+                .setPositiveButton(R.string.ok) { _, _ -> }
+                .setNegativeButton(R.string.privacy_policy) { _, _ ->
+                    val intent = Intent(Intent.ACTION_VIEW)
+                    intent.data = Uri.parse("https://messenger.klinkerapps.com/privacy.html")
+                    context.startActivity(intent)
+                }.show()
     }
 
     companion object {
