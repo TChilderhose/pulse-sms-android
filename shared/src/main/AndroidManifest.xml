@@ -83,10 +83,6 @@
 
     <application android:appCategory="social">
 
-        <activity android:name=".activity.RateItDialog"
-            android:theme="@style/tutorial_FloatingTutorialTheme"
-            android:launchMode="singleInstance" />
-
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="${applicationId}.provider"
@@ -105,9 +101,18 @@
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
 
+        <activity android:name=".activity.RateItDialog"
+            android:theme="@style/tutorial_FloatingTutorialTheme"
+            android:launchMode="singleInstance" />
+
+        <activity android:name=".activity.AppTransferDialog"
+            android:theme="@style/tutorial_FloatingTutorialTheme"
+            android:launchMode="singleInstance" />
+
         <activity
             android:name="com.afollestad.materialcamera.CaptureActivity"
             android:theme="@style/MaterialCamera.CaptureActivity" />
+
         <activity
             android:name="com.afollestad.materialcamera.CaptureActivity2"
             android:theme="@style/MaterialCamera.CaptureActivity" />

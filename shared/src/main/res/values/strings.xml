@@ -801,6 +801,7 @@
     <string name="notification_trial_expired">Your seven day trial is over. Click to upgrade!</string>
     <string name="continue_with_phone_app">You can continue using the app on your phone, for free!</string>
     <string name="thanks_for_trying">Thanks for the trial!</string>
+    <string name="new_owner_title">Pulse is moving!</string>
     <string name="new_owner_with_account">We have a message to display to users with an account.</string>
     <string name="new_owner_no_account">We have a message to display to users without an account.</string>
 

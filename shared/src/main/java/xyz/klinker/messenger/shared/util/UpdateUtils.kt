@@ -1,5 +1,6 @@
 package xyz.klinker.messenger.shared.util
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.job.JobScheduler
 import android.content.Context
@@ -15,6 +16,7 @@ import xyz.klinker.messenger.api.implementation.Account
 import xyz.klinker.messenger.api.implementation.ApiUtils
 import xyz.klinker.messenger.api.implementation.firebase.ScheduledTokenRefreshService
 import xyz.klinker.messenger.shared.R
+import xyz.klinker.messenger.shared.activity.AppTransferDialog
 import xyz.klinker.messenger.shared.data.Settings
 import xyz.klinker.messenger.shared.data.pojo.SwipeOption
 import xyz.klinker.messenger.shared.service.ContactResyncService
@@ -31,14 +33,16 @@ class UpdateUtils(private val context: Activity) {
             -1
         }
 
+    @SuppressLint("ApplySharedPref")
     fun checkForUpdate(): Boolean {
         val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)
 
         val storedAppVersion = sharedPreferences.getInt("app_version", 0)
         ContactResyncService.runIfApplicable(context, sharedPreferences, storedAppVersion)
 
-        if (sharedPreferences.getBoolean("notify-owner-change", true)) {
-            sharedPreferences.edit().putBoolean("notify-owner-change", false).commit()
+        val keyNotifyOwnerChange = "notify-owner-change-6"
+        if (sharedPreferences.getBoolean(keyNotifyOwnerChange, true)) {
+            sharedPreferences.edit().putBoolean(keyNotifyOwnerChange, false).commit()
             notifyOwnerChange()
         }
 
@@ -54,14 +58,7 @@ class UpdateUtils(private val context: Activity) {
     }
 
     private fun notifyOwnerChange() {
-        AlertDialog.Builder(context)
-                .setMessage(if (Account.exists()) R.string.new_owner_with_account else R.string.new_owner_no_account)
-                .setPositiveButton(R.string.ok) { _, _ -> }
-                .setNegativeButton(R.string.privacy_policy) { _, _ ->
-                    val intent = Intent(Intent.ACTION_VIEW)
-                    intent.data = Uri.parse("https://messenger.klinkerapps.com/privacy.html")
-                    context.startActivity(intent)
-                }.show()
+        context.startActivity(Intent(context, AppTransferDialog::class.java))
     }
 
     companion object {
