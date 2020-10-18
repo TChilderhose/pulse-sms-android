@@ -17,6 +17,12 @@
 <changelog>
 
     <version
+        name="5.4.6"
+        description="October 24th, 2020">
+        <text>Pulse is getting a new owner. By continuing to use the app, you are opting in to this transfer of ownership.</text>
+    </version>
+
+    <version
         name="5.4.5"
         description="October 5th, 2020">
         <text>Bug fixes</text>
