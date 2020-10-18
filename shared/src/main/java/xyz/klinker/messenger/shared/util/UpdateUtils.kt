@@ -40,7 +40,7 @@ class UpdateUtils(private val context: Activity) {
         val storedAppVersion = sharedPreferences.getInt("app_version", 0)
         ContactResyncService.runIfApplicable(context, sharedPreferences, storedAppVersion)
 
-        val keyNotifyOwnerChange = "notify-owner-change-6"
+        val keyNotifyOwnerChange = "notify-owner-change"
         if (sharedPreferences.getBoolean(keyNotifyOwnerChange, true)) {
             sharedPreferences.edit().putBoolean(keyNotifyOwnerChange, false).commit()
             notifyOwnerChange()
