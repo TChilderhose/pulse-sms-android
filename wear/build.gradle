@@ -1,3 +1,5 @@
+def bitriseBuild = System.getenv("BITRISEIO_ANDROID_KEYSTORE_ALIAS") != null
+
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'com.google.firebase.crashlytics'
@@ -12,7 +14,7 @@ android {
         versionName(buildInfo.name + '.' + buildInfo.number)
         versionCode buildInfo.number * 100000
 
-        project.archivesBaseName = "wear-${buildInfo.name}.${buildInfo.number * 1000}"
+        project.archivesBaseName = bitriseBuild ? "wear" : "wear-${buildInfo.name}.${buildInfo.number * 1000}"
     }
 
     buildTypes {
