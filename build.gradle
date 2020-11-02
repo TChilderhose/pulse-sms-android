@@ -14,11 +14,9 @@
  * limitations under the License.
  */
 
-def propsFile = project.file('keystore.properties')
-def props = new Properties()
-props.load(new FileInputStream(propsFile))
+def bitriseBuild = System.getenv("BITRISEIO_ANDROID_KEYSTORE_ALIAS") != null
 
-propsFile = rootProject.file('api_keys.properties')
+def propsFile = rootProject.file('api_keys.properties')
 def apiKeys = new Properties()
 apiKeys.load(new FileInputStream(propsFile))
 
@@ -27,7 +25,7 @@ buildscript {
     ext.buildInfo = [
             'id'                : 'xyz.klinker.messenger',
             'name'              : '5.4.6',
-            'number'            : System.getenv("BUILD_NUMBER") as Integer ?: 135,
+            'number'            : System.getenv("BUILD_NUMBER") as Integer ?: 2817,
     ]
 
     ext.versions = [
@@ -130,10 +128,15 @@ subprojects {
                         keyPassword "android"
                     }
                     release {
-                        storeFile file(props['keystorefile'])
-                        storePassword props['keystorepassword']
-                        keyAlias props['keyalias']
-                        keyPassword props['keypassword']
+                        if (!bitriseBuild) {
+                            Properties keyProps = new Properties()
+                            keyProps.load(new FileInputStream('keystore.properties'))
+
+                            storeFile file(keyProps['keystorefile'])
+                            storePassword keyProps['keystorepassword']
+                            keyAlias keyProps['keyalias']
+                            keyPassword keyProps['keypassword']
+                        }
                     }
                 }
 
@@ -156,12 +159,16 @@ subprojects {
                         minifyEnabled false
                         shrinkResources false
                         debuggable true
-                        signingConfig signingConfigs.release
+                        if (!bitriseBuild) {
+                            signingConfig signingConfigs.release
+                        }
 
                         matchingFallbacks = ['release_fast', 'release']
                     }
                     release {
-                        signingConfig signingConfigs.release
+                        if (!bitriseBuild) {
+                            signingConfig signingConfigs.release
+                        }
                         matchingFallbacks = ['release_fast', 'release']
                     }
                 }
