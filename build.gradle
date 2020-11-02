@@ -225,3 +225,7 @@ subprojects {
 
     }
 }
+
+task bitriseAssembleBundleRelease(dependsOn: ['app:bundleRelease', 'wear:bundleRelease']) {
+    //bitrise task to build both main app + wear app in single step
+}
